@@ -44,7 +44,6 @@
 
   <properties>
     <slf4j.version>1.7.21</slf4j.version>
-    <logback.version>1.1.2</logback.version>
     <pax-exam.version>4.13.3</pax-exam.version>
 
     <bundle.build.dir>
@@ -202,18 +201,6 @@
       <version>${slf4j.version}</version>
       <scope>compile</scope>
       <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>${logback.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-core</artifactId>
-      <version>${logback.version}</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.sling</groupId>
