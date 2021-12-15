@@ -20,11 +20,14 @@
 package org.apache.sling.commons.log.webconsole.internal;
 
 import org.apache.sling.commons.log.logback.webconsole.LogPanel;
+import org.osgi.annotation.bundle.Header;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
+@Header(name = Constants.BUNDLE_ACTIVATOR, value = "${@class}")
 public class Activator implements BundleActivator {
     private ServiceTracker<LogPanel, LogWebConsolePlugin> panelTracker;
 
