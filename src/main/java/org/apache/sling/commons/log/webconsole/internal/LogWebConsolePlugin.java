@@ -19,6 +19,12 @@
 
 package org.apache.sling.commons.log.webconsole.internal;
 
+import static org.apache.sling.commons.log.logback.webconsole.LogPanel.APP_ROOT;
+import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_APPENDER_NAME;
+import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_TAIL_GREP;
+import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_TAIL_NUM_OF_LINES;
+import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PATH_TAILER;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -30,13 +36,6 @@ import org.apache.felix.webconsole.SimpleWebConsolePlugin;
 import org.apache.sling.commons.log.logback.webconsole.LogPanel;
 import org.apache.sling.commons.log.logback.webconsole.LoggerConfig;
 import org.apache.sling.commons.log.logback.webconsole.TailerOptions;
-import org.apache.sling.commons.osgi.PropertiesUtil;
-
-import static org.apache.sling.commons.log.logback.webconsole.LogPanel.APP_ROOT;
-import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_APPENDER_NAME;
-import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_TAIL_NUM_OF_LINES;
-import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_TAIL_GREP;
-import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PATH_TAILER;
 
 public class LogWebConsolePlugin extends SimpleWebConsolePlugin {
     private static final String RES_LOC = LogPanel.APP_ROOT + "/res/ui";
@@ -69,7 +68,12 @@ public class LogWebConsolePlugin extends SimpleWebConsolePlugin {
                     pw.printf("Provide appender name via [%s] request parameter%n", PARAM_APPENDER_NAME);
                     return;
                 }
-                int numOfLines = PropertiesUtil.toInteger(req.getParameter(PARAM_TAIL_NUM_OF_LINES), 0);
+                int numOfLines = 0 ;
+                try {
+                    numOfLines = Integer.valueOf(req.getParameter(PARAM_TAIL_NUM_OF_LINES));
+                } catch ( NumberFormatException e ) {
+                    // ignore
+                }
                 TailerOptions opts = new TailerOptions(numOfLines, regex);
                 panel.tail(pw, appenderName, opts);
                 return;
@@ -100,7 +104,7 @@ public class LogWebConsolePlugin extends SimpleWebConsolePlugin {
             String logger = req.getParameter("logger");
             String logLevel = req.getParameter("loglevel");
             String logFile = req.getParameter("logfile");
-            boolean additive = PropertiesUtil.toBoolean(req.getParameter("logAdditive"), false);
+            boolean additive = Boolean.parseBoolean(req.getParameter("logAdditive"));
             String[] loggers = req.getParameterValues("logger");
             if (null != logger) {
                 LoggerConfig config = new LoggerConfig(pid, logLevel, loggers, logFile, additive);
