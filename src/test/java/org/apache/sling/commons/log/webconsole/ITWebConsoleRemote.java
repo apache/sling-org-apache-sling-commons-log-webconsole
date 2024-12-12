@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.sling.commons.log.webconsole;
 
 import java.io.File;
@@ -69,22 +68,21 @@ public class ITWebConsoleRemote extends LogTestBase {
     @Override
     protected Option addExtraOptions() {
         return composite(
-            frameworkProperty("org.apache.sling.commons.log.configurationFile").value(
-                FilenameUtils.concat(new File(".").getAbsolutePath(), "src/test/resources/test-webconsole-remote.xml")),
-            createWebConsoleTestBundle()
-        );
+                frameworkProperty("org.apache.sling.commons.log.configurationFile")
+                        .value(FilenameUtils.concat(
+                                new File(".").getAbsolutePath(), "src/test/resources/test-webconsole-remote.xml")),
+                createWebConsoleTestBundle());
     }
 
     private Option createWebConsoleTestBundle() {
         TinyBundle bundle = bundle();
-        for(Class c : WebConsoleTestActivator.BUNDLE_CLASS_NAMES){
+        for (Class c : WebConsoleTestActivator.BUNDLE_CLASS_NAMES) {
             bundle.add(c);
         }
 
-        bundle.set(Constants.BUNDLE_SYMBOLICNAME,"org.apache.sling.common.log.testbundle")
-              .set(Constants.BUNDLE_ACTIVATOR , WebConsoleTestActivator.class.getName());
+        bundle.set(Constants.BUNDLE_SYMBOLICNAME, "org.apache.sling.common.log.testbundle")
+                .set(Constants.BUNDLE_ACTIVATOR, WebConsoleTestActivator.class.getName());
         return provision(bundle.build(withBnd()));
-
     }
 
     @Before
@@ -109,13 +107,13 @@ public class ITWebConsoleRemote extends LogTestBase {
         final HtmlPage page = webClient.getPage(prepareUrl(PLUGIN_SUFFIX));
         String text = page.asText();
 
-        //Filter name should be part of Filter table
+        // Filter name should be part of Filter table
         assertThat(text, containsString("WebConsoleTestTurboFilter"));
 
-        //Console name should be part of console table
+        // Console name should be part of console table
         assertThat(text, containsString("WebConsoleTestAppender"));
 
-        //Should show file name testremote.log
+        // Should show file name testremote.log
         assertThat(text, containsString("testremote.log"));
     }
 
@@ -124,30 +122,31 @@ public class ITWebConsoleRemote extends LogTestBase {
         final HtmlPage page = webClient.getPage(prepareUrl(PRINTER_SUFFIX));
         String text = page.asText();
 
-        //Should dump content of configured file testremote.log
-        //with its name
+        // Should dump content of configured file testremote.log
+        // with its name
         assertTrue(text.contains("testremote.log"));
     }
 
     @Test
-    public void tailerHeader() throws Exception{
+    public void tailerHeader() throws Exception {
         Page page = webClient.getPage(prepareUrl("slinglog/tailer.txt?name=webconsoletest1.log"));
         String nosniffHeader = page.getWebResponse().getResponseHeaderValue("X-Content-Type-Options");
         assertEquals("nosniff", nosniffHeader);
     }
 
     @Test
-    public void tailerGrep() throws Exception{
-        TextPage page  = webClient.getPage(prepareUrl("slinglog/tailer.txt?name=FILE&tail=-1"));
+    public void tailerGrep() throws Exception {
+        TextPage page = webClient.getPage(prepareUrl("slinglog/tailer.txt?name=FILE&tail=-1"));
         String text = page.getContent();
 
         assertThat(text, containsString(WebConsoleTestActivator.FOO_LOG));
         assertThat(text, containsString(WebConsoleTestActivator.BAR_LOG));
 
-        page  = webClient.getPage(prepareUrl("slinglog/tailer.txt?name=FILE&tail=1000&grep="+WebConsoleTestActivator.FOO_LOG));
+        page = webClient.getPage(
+                prepareUrl("slinglog/tailer.txt?name=FILE&tail=1000&grep=" + WebConsoleTestActivator.FOO_LOG));
         text = page.getContent();
 
-        //With grep pattern specified we should only see foo and not bar
+        // With grep pattern specified we should only see foo and not bar
         assertThat(text, containsString(WebConsoleTestActivator.FOO_LOG));
         assertThat(text, not(containsString(WebConsoleTestActivator.BAR_LOG)));
     }

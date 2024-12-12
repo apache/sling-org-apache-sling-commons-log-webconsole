@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.sling.commons.log.webconsole;
 
 import javax.inject.Inject;
@@ -52,5 +51,4 @@ public class ITLogWebConsolePlugin extends LogTestBase {
     public void testLogPlugin() throws Exception {
         assertNotNull(servlet);
     }
-
 }
