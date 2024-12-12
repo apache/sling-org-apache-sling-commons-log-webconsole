@@ -21,13 +21,13 @@ package org.apache.sling.commons.log.webconsole;
 import java.io.File;
 import java.io.IOException;
 
-import com.gargoylesoftware.htmlunit.DefaultCredentialsProvider;
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.TextPage;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.sling.commons.log.webconsole.remote.WebConsoleTestActivator;
+import org.htmlunit.DefaultCredentialsProvider;
+import org.htmlunit.Page;
+import org.htmlunit.TextPage;
+import org.htmlunit.WebClient;
+import org.htmlunit.html.HtmlPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -99,13 +99,14 @@ public class ITWebConsoleRemote extends LogTestBase {
     @Before
     public void prepareWebClient() {
         webClient = new WebClient();
-        ((DefaultCredentialsProvider) webClient.getCredentialsProvider()).addCredentials("admin", "admin");
+        ((DefaultCredentialsProvider) webClient.getCredentialsProvider())
+                .addCredentials("admin", "admin".toCharArray());
     }
 
     @Test
     public void testWebConsolePlugin() throws IOException {
         final HtmlPage page = webClient.getPage(prepareUrl(PLUGIN_SUFFIX));
-        String text = page.asText();
+        String text = page.asNormalizedText();
 
         // Filter name should be part of Filter table
         assertThat(text, containsString("WebConsoleTestTurboFilter"));
@@ -120,7 +121,7 @@ public class ITWebConsoleRemote extends LogTestBase {
     @Test
     public void testPrinter() throws IOException {
         final HtmlPage page = webClient.getPage(prepareUrl(PRINTER_SUFFIX));
-        String text = page.asText();
+        String text = page.asNormalizedText();
 
         // Should dump content of configured file testremote.log
         // with its name
