@@ -23,14 +23,14 @@
   <parent>
     <groupId>org.apache.sling</groupId>
     <artifactId>sling-bundle-parent</artifactId>
-    <version>46</version>
+    <version>62</version>
     <relativePath />
   </parent>
 
   <artifactId>org.apache.sling.commons.log.webconsole</artifactId>
   <version>1.0.1-SNAPSHOT</version>
 
-  <name>Apache Sling Log WebConsole</name>
+  <name>Apache Sling Commons Log WebConsole</name>
   <description>
     This bundle provides webconsole plugin for Sling Commons Log
   </description>
@@ -42,6 +42,7 @@
   </scm>
 
   <properties>
+    <sling.java.version>8</sling.java.version>
     <slf4j.version>1.7.21</slf4j.version>
     <pax-exam.version>4.13.3</pax-exam.version>
     <project.build.outputTimestamp>10</project.build.outputTimestamp>
@@ -182,21 +183,30 @@
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.commons.log</artifactId>
       <version>5.0.2</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- OSGi Libraries not included here -->
     <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>osgi.core</artifactId>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.framework</artifactId>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.util.tracker</artifactId>
+        <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>org.osgi</groupId>
         <artifactId>org.osgi.annotation.bundle</artifactId>
+        <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.webconsole</artifactId>
       <version>4.3.0</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- servlet API for the web console plugin -->
@@ -204,6 +214,7 @@
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.3</version>
+      <scope>provided</scope>
     </dependency>
 
     <!--  OSGi Command Line Shell support -->
@@ -218,6 +229,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -336,6 +348,7 @@
       <groupId>org.apache.felix</groupId>
       <artifactId>org.apache.felix.inventory</artifactId>
       <version>1.0.4</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
