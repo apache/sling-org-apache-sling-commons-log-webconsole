@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.sling.commons.log.webconsole.internal;
 
 import org.apache.sling.commons.log.logback.webconsole.LogPanel;

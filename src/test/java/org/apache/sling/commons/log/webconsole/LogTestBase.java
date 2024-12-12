@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.sling.commons.log.webconsole;
+
+import javax.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -81,31 +80,39 @@ public abstract class LogTestBase {
         final File bundleFile = new File(bundleFileName);
         if (!bundleFile.canRead()) {
             throw new IllegalArgumentException("Cannot read from bundle file " + bundleFileName + " specified in the "
-                + BUNDLE_JAR_SYS_PROP + " system property. Try building the project first " +
-                    "with 'mvn clean install -Pide -DskipTests'");
+                    + BUNDLE_JAR_SYS_PROP + " system property. Try building the project first "
+                    + "with 'mvn clean install -Pide -DskipTests'");
         }
         return options(
-            // the current project (the bundle under test)
-            CoreOptions.bundle(bundleFile.toURI().toString()),
-            repository("https://repository.apache.org/snapshots/").id("apache-snapshots").allowSnapshots(),
-            mavenBundle("org.slf4j", "slf4j-api").versionAsInProject(),
-            mavenBundle("org.apache.sling", "org.apache.sling.commons.logservice").versionAsInProject(),
-            LogTestBase.webSupport(),
-            mavenBundle("org.apache.sling", "org.apache.sling.commons.log").versionAsInProject(),
-            mavenBundle("org.apache.felix", "org.apache.felix.http.jetty").versionAsInProject(),
-            mavenBundle("org.apache.felix", "org.apache.felix.webconsole").versionAsInProject(),
-            mavenBundle("org.apache.felix", "org.apache.felix.inventory").versionAsInProject(),
-            mavenBundle("org.apache.felix", "org.apache.felix.metatype").versionAsInProject(),
-            mavenBundle("org.apache.felix", "org.apache.felix.scr").versionAsInProject(),
-            mavenBundle("commons-io", "commons-io").versionAsInProject(),
-            wrappedBundle(mavenBundle("commons-fileupload", "commons-fileupload").versionAsInProject()),
-            LogTestBase.configAdmin(),
-            addPaxExamSpecificOptions(),
-            addCodeCoverageOption(), addDebugOptions(), addExtraOptions(), addDefaultOptions());
+                // the current project (the bundle under test)
+                CoreOptions.bundle(bundleFile.toURI().toString()),
+                repository("https://repository.apache.org/snapshots/")
+                        .id("apache-snapshots")
+                        .allowSnapshots(),
+                mavenBundle("org.slf4j", "slf4j-api").versionAsInProject(),
+                mavenBundle("org.apache.sling", "org.apache.sling.commons.logservice")
+                        .versionAsInProject(),
+                LogTestBase.webSupport(),
+                mavenBundle("org.apache.sling", "org.apache.sling.commons.log").versionAsInProject(),
+                mavenBundle("org.apache.felix", "org.apache.felix.http.jetty").versionAsInProject(),
+                mavenBundle("org.apache.felix", "org.apache.felix.webconsole").versionAsInProject(),
+                mavenBundle("org.apache.felix", "org.apache.felix.inventory").versionAsInProject(),
+                mavenBundle("org.apache.felix", "org.apache.felix.metatype").versionAsInProject(),
+                mavenBundle("org.apache.felix", "org.apache.felix.scr").versionAsInProject(),
+                mavenBundle("commons-io", "commons-io").versionAsInProject(),
+                wrappedBundle(
+                        mavenBundle("commons-fileupload", "commons-fileupload").versionAsInProject()),
+                LogTestBase.configAdmin(),
+                addPaxExamSpecificOptions(),
+                addCodeCoverageOption(),
+                addDebugOptions(),
+                addExtraOptions(),
+                addDefaultOptions());
     }
 
     protected Option addPaxExamSpecificOptions() {
-        return composite(junitBundles(), systemProperty("pax.exam.osgi.unresolved.fail").value("fail"));
+        return composite(
+                junitBundles(), systemProperty("pax.exam.osgi.unresolved.fail").value("fail"));
     }
 
     protected Option addDefaultOptions() {
@@ -119,8 +126,11 @@ public abstract class LogTestBase {
             if (workDirFile.exists()) {
                 FileUtils.deleteDirectory(workDirFile);
             }
-            return composite(CoreOptions.vmOption(paxRunnerVmOption), keepCaches(),
-                systemTimeout(TimeUnit.MINUTES.toMillis(10)), workingDirectory(workDir));
+            return composite(
+                    CoreOptions.vmOption(paxRunnerVmOption),
+                    keepCaches(),
+                    systemTimeout(TimeUnit.MINUTES.toMillis(10)),
+                    workingDirectory(workDir));
         }
         return null;
     }
@@ -143,8 +153,9 @@ public abstract class LogTestBase {
     }
 
     protected static Option webSupport() {
-        return composite(mavenBundle("org.apache.felix", "org.apache.felix.http.bundle").versionAsInProject(),
-            systemProperty("org.osgi.service.http.port").value(getServerPort()));
+        return composite(
+                mavenBundle("org.apache.felix", "org.apache.felix.http.bundle").versionAsInProject(),
+                systemProperty("org.osgi.service.http.port").value(getServerPort()));
     }
 
     protected Option addExtraOptions() {

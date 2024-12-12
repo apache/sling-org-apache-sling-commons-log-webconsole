@@ -60,14 +60,13 @@ public class WebConsoleTestActivator implements BundleActivator {
 
     @Override
     public void start(BundleContext context) throws Exception {
-        context.registerService(TurboFilter.class.getName(),new WebConsoleTestTurboFilter(),null);
-        context.registerService(ConfigProvider.class.getName(),new WebConsoleTestConfigProvider(),null);
+        context.registerService(TurboFilter.class.getName(), new WebConsoleTestTurboFilter(), null);
+        context.registerService(ConfigProvider.class.getName(), new WebConsoleTestConfigProvider(), null);
 
         Dictionary<String, Object> props = new Hashtable<String, Object>();
         String prefix = "WebConsoleTest";
         String[] loggers = {
-                prefix + ".foo.bar",
-                prefix + ".foo.baz",
+            prefix + ".foo.bar", prefix + ".foo.baz",
         };
 
         props.put("loggers", loggers);
@@ -84,21 +83,20 @@ public class WebConsoleTestActivator implements BundleActivator {
     }
 
     private void emitLogs() throws InterruptedException {
-        //Let system stabalize so that log statement gets logged to file instead of console
+        // Let system stabalize so that log statement gets logged to file instead of console
         TimeUnit.SECONDS.sleep(2);
         log.info(FOO_LOG);
         log.info(BAR_LOG);
     }
 
     @Override
-    public void stop(BundleContext context) throws Exception {
-
-    }
+    public void stop(BundleContext context) throws Exception {}
 
     private static class WebConsoleTestTurboFilter extends MatchingFilter {
         @Override
-        public FilterReply decide(Marker marker, Logger logger, Level level, String format, Object[] params, Throwable t) {
-            if(logger.getName().equals("turbofilter.foo.bar")){
+        public FilterReply decide(
+                Marker marker, Logger logger, Level level, String format, Object[] params, Throwable t) {
+            if (logger.getName().equals("turbofilter.foo.bar")) {
                 return FilterReply.DENY;
             }
             return FilterReply.NEUTRAL;
@@ -109,7 +107,7 @@ public class WebConsoleTestActivator implements BundleActivator {
 
         @Override
         public FilterReply decide(ILoggingEvent event) {
-            if(event.getLoggerName().equals("filter.foo.bar")){
+            if (event.getLoggerName().equals("filter.foo.bar")) {
                 return FilterReply.DENY;
             }
             return FilterReply.NEUTRAL;
@@ -133,12 +131,12 @@ public class WebConsoleTestActivator implements BundleActivator {
     private static class WebConsoleTestConfigProvider implements ConfigProvider {
 
         public InputSource getConfigSource() {
-            String config = "<included>  <appender name=\"FILE\" class=\"ch.qos.logback.core.FileAppender\">\n" +
-                    "    <file>${sling.home}/logs/webconsoletest1.log</file>\n" +
-                    "    <encoder>\n" +
-                    "      <pattern>%d %-5level %logger{35} - %msg %n</pattern>\n" +
-                    "    </encoder>\n" +
-                    "  </appender></included>";
+            String config = "<included>  <appender name=\"FILE\" class=\"ch.qos.logback.core.FileAppender\">\n"
+                    + "    <file>${sling.home}/logs/webconsoletest1.log</file>\n"
+                    + "    <encoder>\n"
+                    + "      <pattern>%d %-5level %logger{35} - %msg %n</pattern>\n"
+                    + "    </encoder>\n"
+                    + "  </appender></included>";
             return new InputSource(new StringReader(config));
         }
     }

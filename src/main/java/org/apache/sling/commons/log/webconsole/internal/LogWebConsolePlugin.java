@@ -16,8 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.sling.commons.log.webconsole.internal;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.apache.felix.webconsole.SimpleWebConsolePlugin;
+import org.apache.sling.commons.log.logback.webconsole.LogPanel;
+import org.apache.sling.commons.log.logback.webconsole.LoggerConfig;
+import org.apache.sling.commons.log.logback.webconsole.TailerOptions;
 
 import static org.apache.sling.commons.log.logback.webconsole.LogPanel.APP_ROOT;
 import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_APPENDER_NAME;
@@ -25,25 +36,11 @@ import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_TAI
 import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_TAIL_NUM_OF_LINES;
 import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PATH_TAILER;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.felix.webconsole.SimpleWebConsolePlugin;
-import org.apache.sling.commons.log.logback.webconsole.LogPanel;
-import org.apache.sling.commons.log.logback.webconsole.LoggerConfig;
-import org.apache.sling.commons.log.logback.webconsole.TailerOptions;
-
 public class LogWebConsolePlugin extends SimpleWebConsolePlugin {
     private static final String RES_LOC = LogPanel.APP_ROOT + "/res/ui";
 
     private static final String[] CSS_REFS = {
-            RES_LOC + "/jquery.autocomplete.css",
-            RES_LOC + "/prettify.css",
-            RES_LOC + "/log.css",
+        RES_LOC + "/jquery.autocomplete.css", RES_LOC + "/prettify.css", RES_LOC + "/log.css",
     };
 
     private final LogPanel panel;
@@ -68,10 +65,10 @@ public class LogWebConsolePlugin extends SimpleWebConsolePlugin {
                     pw.printf("Provide appender name via [%s] request parameter%n", PARAM_APPENDER_NAME);
                     return;
                 }
-                int numOfLines = 0 ;
+                int numOfLines = 0;
                 try {
                     numOfLines = Integer.valueOf(req.getParameter(PARAM_TAIL_NUM_OF_LINES));
-                } catch ( NumberFormatException e ) {
+                } catch (NumberFormatException e) {
                     // ignore
                 }
                 TailerOptions opts = new TailerOptions(numOfLines, regex);
