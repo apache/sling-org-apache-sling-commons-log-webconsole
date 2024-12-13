@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>org.apache.sling.commons.log.webconsole</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
 
     <name>Apache Sling Commons Log WebConsole</name>
     <description>This bundle provides webconsole plugin for Sling Commons Log</description>
@@ -36,7 +36,7 @@
     <scm>
         <connection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-commons-log-webconsole.git</connection>
         <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/sling-org-apache-sling-commons-log-webconsole.git</developerConnection>
-        <tag>org.apache.sling.commons.log.webconsole-1.0.2</tag>
+        <tag>HEAD</tag>
         <url>https://github.com/apache/sling-org-apache-sling-commons-log-webconsole.git</url>
     </scm>
 
@@ -44,7 +44,7 @@
         <sling.java.version>8</sling.java.version>
         <slf4j.version>1.7.21</slf4j.version>
         <pax-exam.version>4.13.3</pax-exam.version>
-        <project.build.outputTimestamp>1734083943</project.build.outputTimestamp>
+        <project.build.outputTimestamp>1734083968</project.build.outputTimestamp>
 
         <bundle.build.dir>${basedir}/target</bundle.build.dir>
         <bundle.file.name>${bundle.build.dir}/${project.build.finalName}.jar</bundle.file.name>
