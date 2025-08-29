@@ -55,7 +55,7 @@ public abstract class LogTestBase {
     // the name of the system property which captures the jococo coverage agent
     // command
     // if specified then agent would be specified otherwise ignored
-    protected static final String COVERAGE_COMMAND = "coverage.command";
+    protected static final String COVERAGE_COMMAND = "jacoco.it.command";
 
     // the default bundle jar file name
     protected static final String BUNDLE_JAR_DEFAULT = "target/slinglogback-webconsole.jar";

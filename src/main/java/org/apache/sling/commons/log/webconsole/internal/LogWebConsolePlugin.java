@@ -18,17 +18,23 @@
  */
 package org.apache.sling.commons.log.webconsole.internal;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Dictionary;
+import java.util.Map;
 
-import org.apache.felix.webconsole.SimpleWebConsolePlugin;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.felix.webconsole.servlet.AbstractServlet;
+import org.apache.felix.webconsole.servlet.ServletConstants;
 import org.apache.sling.commons.log.logback.webconsole.LogPanel;
 import org.apache.sling.commons.log.logback.webconsole.LoggerConfig;
 import org.apache.sling.commons.log.logback.webconsole.TailerOptions;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceRegistration;
 
 import static org.apache.sling.commons.log.logback.webconsole.LogPanel.APP_ROOT;
 import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_APPENDER_NAME;
@@ -36,53 +42,78 @@ import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_TAI
 import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PARAM_TAIL_NUM_OF_LINES;
 import static org.apache.sling.commons.log.logback.webconsole.LogPanel.PATH_TAILER;
 
-public class LogWebConsolePlugin extends SimpleWebConsolePlugin {
+public class LogWebConsolePlugin extends AbstractServlet {
+    private static final long serialVersionUID = 1L;
+
     private static final String RES_LOC = LogPanel.APP_ROOT + "/res/ui";
 
     private static final String[] CSS_REFS = {
         RES_LOC + "/jquery.autocomplete.css", RES_LOC + "/prettify.css", RES_LOC + "/log.css",
     };
 
-    private final LogPanel panel;
+    private final transient LogPanel panel;
 
     public LogWebConsolePlugin(LogPanel panel) {
-        super(LogPanel.APP_ROOT, "Log Support", "Sling", CSS_REFS);
         this.panel = panel;
     }
 
+    public ServiceRegistration<Servlet> register(BundleContext context) {
+        Dictionary<String, Object> props = FrameworkUtil.asDictionary(Map.of(
+                ServletConstants.PLUGIN_LABEL,
+                LogPanel.APP_ROOT,
+                ServletConstants.PLUGIN_TITLE,
+                "Log Support",
+                ServletConstants.PLUGIN_CATEGORY,
+                "Sling",
+                ServletConstants.PLUGIN_CSS_REFERENCES,
+                CSS_REFS));
+        return context.registerService(Servlet.class, this, props);
+    }
+
+    /**
+     * Override so we can ensure the rendering of the tailer text output
+     * does not contain the html header and footer tags.
+     */
     @Override
-    protected void renderContent(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        final PrintWriter pw = resp.getWriter();
-        final String consoleAppRoot = getAppRoot(req);
-
-        if (req.getPathInfo() != null) {
-            if (req.getPathInfo().endsWith(PATH_TAILER)) {
-                String appenderName = req.getParameter(PARAM_APPENDER_NAME);
-                String regex = req.getParameter(PARAM_TAIL_GREP);
-                addNoSniffHeader(resp);
-                if (appenderName == null) {
-                    pw.printf("Provide appender name via [%s] request parameter%n", PARAM_APPENDER_NAME);
-                    return;
-                }
-                int numOfLines = 0;
-                try {
-                    numOfLines = Integer.valueOf(req.getParameter(PARAM_TAIL_NUM_OF_LINES));
-                } catch (NumberFormatException e) {
-                    // ignore
-                }
-                TailerOptions opts = new TailerOptions(numOfLines, regex);
-                panel.tail(pw, appenderName, opts);
-                return;
-            }
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if ("GET".equalsIgnoreCase(req.getMethod())
+                && req.getPathInfo() != null
+                && req.getPathInfo().endsWith(PATH_TAILER)) {
+            renderContent(req, resp);
+        } else {
+            super.service(req, resp);
         }
-
-        panel.render(pw, consoleAppRoot);
     }
 
     @Override
-    protected boolean isHtmlRequest(HttpServletRequest request) {
-        return !request.getRequestURI().endsWith(PATH_TAILER);
+    public void renderContent(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        final PrintWriter pw = resp.getWriter();
+        final String consoleAppRoot = getAppRoot(req);
+
+        if (req.getPathInfo() != null && req.getPathInfo().endsWith(PATH_TAILER)) {
+            // NOTE: set the content type here to ensure that EnhancedPluginAdapter.CheckHttpServletResponse
+            //       that is being processed knows that the output is done and doesn't try rendering the html
+            //       header and footer tags
+            resp.setContentType("text/plain");
+            String appenderName = req.getParameter(PARAM_APPENDER_NAME);
+            String regex = req.getParameter(PARAM_TAIL_GREP);
+            addNoSniffHeader(resp);
+            if (appenderName == null) {
+                pw.printf("Provide appender name via [%s] request parameter%n", PARAM_APPENDER_NAME);
+                return;
+            }
+            int numOfLines = 0;
+            try {
+                numOfLines = Integer.valueOf(req.getParameter(PARAM_TAIL_NUM_OF_LINES));
+            } catch (NumberFormatException e) {
+                // ignore
+            }
+            TailerOptions opts = new TailerOptions(numOfLines, regex);
+            panel.tail(pw, appenderName, opts);
+            return;
+        }
+
+        panel.render(pw, consoleAppRoot);
     }
 
     @Override

@@ -50,7 +50,7 @@ public class WebConsoleTestActivator implements BundleActivator {
     public static final String FOO_LOG = "WebConsoleTestActivator-Foo";
     public static final String BAR_LOG = "WebConsoleTestActivator-BAR";
 
-    public static Class[] BUNDLE_CLASS_NAMES = {
+    public static Class<?>[] BUNDLE_CLASS_NAMES = {
         WebConsoleTestActivator.class,
         WebConsoleTestTurboFilter.class,
         WebConsoleTestConfigProvider.class,
