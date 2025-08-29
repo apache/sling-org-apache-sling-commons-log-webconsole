@@ -19,8 +19,8 @@
 package org.apache.sling.commons.log.webconsole;
 
 import javax.inject.Inject;
-import javax.servlet.Servlet;
 
+import jakarta.servlet.Servlet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.junit.PaxExam;
