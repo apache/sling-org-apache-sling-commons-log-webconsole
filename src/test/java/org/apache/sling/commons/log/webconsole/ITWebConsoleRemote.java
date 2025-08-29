@@ -36,19 +36,19 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.TestContainer;
 import org.ops4j.pax.exam.spi.DefaultExamSystem;
 import org.ops4j.pax.exam.spi.PaxExamRuntime;
-import org.ops4j.pax.tinybundles.core.TinyBundle;
+import org.ops4j.pax.tinybundles.TinyBundle;
 import org.osgi.framework.Constants;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.ops4j.pax.exam.CoreOptions.composite;
 import static org.ops4j.pax.exam.CoreOptions.frameworkProperty;
 import static org.ops4j.pax.exam.CoreOptions.provision;
-import static org.ops4j.pax.tinybundles.core.TinyBundles.bundle;
-import static org.ops4j.pax.tinybundles.core.TinyBundles.withBnd;
+import static org.ops4j.pax.tinybundles.TinyBundles.bndBuilder;
+import static org.ops4j.pax.tinybundles.TinyBundles.bundle;
 
 public class ITWebConsoleRemote extends LogTestBase {
 
@@ -76,13 +76,13 @@ public class ITWebConsoleRemote extends LogTestBase {
 
     private Option createWebConsoleTestBundle() {
         TinyBundle bundle = bundle();
-        for (Class c : WebConsoleTestActivator.BUNDLE_CLASS_NAMES) {
-            bundle.add(c);
+        for (Class<?> c : WebConsoleTestActivator.BUNDLE_CLASS_NAMES) {
+            bundle.addClass(c);
         }
 
-        bundle.set(Constants.BUNDLE_SYMBOLICNAME, "org.apache.sling.common.log.testbundle")
-                .set(Constants.BUNDLE_ACTIVATOR, WebConsoleTestActivator.class.getName());
-        return provision(bundle.build(withBnd()));
+        bundle.setHeader(Constants.BUNDLE_SYMBOLICNAME, "org.apache.sling.common.log.testbundle")
+                .setHeader(Constants.BUNDLE_ACTIVATOR, WebConsoleTestActivator.class.getName());
+        return provision(bundle.build(bndBuilder()));
     }
 
     @Before

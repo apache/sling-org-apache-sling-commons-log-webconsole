@@ -89,12 +89,17 @@ public abstract class LogTestBase {
                 repository("https://repository.apache.org/snapshots/")
                         .id("apache-snapshots")
                         .allowSnapshots(),
-                mavenBundle("org.slf4j", "slf4j-api").versionAsInProject(),
                 mavenBundle("org.apache.sling", "org.apache.sling.commons.logservice")
                         .versionAsInProject(),
                 LogTestBase.webSupport(),
-                mavenBundle("org.apache.sling", "org.apache.sling.commons.log").versionAsInProject(),
-                mavenBundle("org.apache.felix", "org.apache.felix.http.jetty").versionAsInProject(),
+                mavenBundle("org.apache.sling", "org.apache.sling.commons.log")
+                        .classifier("all")
+                        .versionAsInProject(),
+                mavenBundle("org.osgi", "org.osgi.util.converter").version("1.0.9"),
+                mavenBundle("org.owasp.encoder", "encoder").version("1.3.1"),
+                mavenBundle("org.apache.felix", "org.apache.felix.http.servlet-api")
+                        .version("6.1.0"),
+                mavenBundle("org.apache.felix", "org.apache.felix.http.jetty12").versionAsInProject(),
                 mavenBundle("org.apache.felix", "org.apache.felix.webconsole").versionAsInProject(),
                 mavenBundle("org.apache.felix", "org.apache.felix.inventory").versionAsInProject(),
                 mavenBundle("org.apache.felix", "org.apache.felix.metatype").versionAsInProject(),
