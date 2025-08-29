@@ -53,7 +53,7 @@ public class LogWebConsolePlugin extends AbstractServlet {
 
     private final transient LogPanel panel;
 
-    private ServiceRegistration<Servlet> serviceReg;
+    private transient ServiceRegistration<Servlet> serviceReg;  // NOSNOAR
 
     public LogWebConsolePlugin(LogPanel panel) {
         this.panel = panel;
