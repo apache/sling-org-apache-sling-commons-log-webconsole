@@ -41,9 +41,9 @@
     </scm>
 
     <properties>
-        <sling.java.version>8</sling.java.version>
+        <sling.java.version>17</sling.java.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <pax-exam.version>4.13.3</pax-exam.version>
+        <pax-exam.version>4.14.0</pax-exam.version>
         <project.build.outputTimestamp>1734083968</project.build.outputTimestamp>
 
         <bundle.build.dir>${basedir}/target</bundle.build.dir>
@@ -67,7 +67,8 @@
         <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.commons.log</artifactId>
-            <version>5.5.0</version>
+            <version>6.0.0</version>
+            <classifier>all</classifier>
             <scope>provided</scope>
         </dependency>
 
@@ -90,15 +91,14 @@
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.webconsole</artifactId>
-            <version>4.3.0</version>
+            <version>4.9.10</version>
             <scope>provided</scope>
         </dependency>
 
         <!-- servlet API for the web console plugin -->
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.3</version>
+            <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -146,13 +146,12 @@
         <dependency>
             <groupId>org.ops4j.pax.tinybundles</groupId>
             <artifactId>tinybundles</artifactId>
-            <version>2.0.0</version>
+            <version>4.0.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-            <version>1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -195,8 +194,8 @@
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.http.jetty</artifactId>
-            <version>2.2.0</version>
+            <artifactId>org.apache.felix.http.jetty12</artifactId>
+            <version>1.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -286,7 +285,6 @@
             <plugin>
                 <groupId>org.apache.servicemix.tooling</groupId>
                 <artifactId>depends-maven-plugin</artifactId>
-                <version>1.2</version>
                 <executions>
                     <execution>
                         <id>generate-depends-file</id>

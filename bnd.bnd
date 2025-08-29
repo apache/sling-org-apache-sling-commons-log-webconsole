@@ -1,4 +1,1 @@
 Bundle-DocURL: http://sling.apache.org/site/logging.html
-Import-Package: javax.servlet; \
-              javax.servlet.http;version=2.3, \
-              *
