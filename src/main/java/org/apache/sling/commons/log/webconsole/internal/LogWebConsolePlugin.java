@@ -53,13 +53,11 @@ public class LogWebConsolePlugin extends AbstractServlet {
 
     private final transient LogPanel panel;
 
-    private transient ServiceRegistration<Servlet> serviceReg; // NOSNOAR
-
     public LogWebConsolePlugin(LogPanel panel) {
         this.panel = panel;
     }
 
-    public void register(BundleContext context) {
+    public ServiceRegistration<Servlet> register(BundleContext context) {
         Dictionary<String, Object> props = FrameworkUtil.asDictionary(Map.of(
                 ServletConstants.PLUGIN_LABEL,
                 LogPanel.APP_ROOT,
@@ -69,11 +67,7 @@ public class LogWebConsolePlugin extends AbstractServlet {
                 "Sling",
                 ServletConstants.PLUGIN_CSS_REFERENCES,
                 CSS_REFS));
-        serviceReg = context.registerService(Servlet.class, this, props);
-    }
-
-    public void unregister() {
-        serviceReg.unregister();
+        return context.registerService(Servlet.class, this, props);
     }
 
     /**
