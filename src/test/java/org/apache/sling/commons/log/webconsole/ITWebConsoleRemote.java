@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.sling.commons.log.logback.webconsole.LogPanel;
 import org.apache.sling.commons.log.webconsole.remote.WebConsoleTestActivator;
 import org.htmlunit.DefaultCredentialsProvider;
 import org.htmlunit.Page;
@@ -150,6 +151,17 @@ public class ITWebConsoleRemote extends LogTestBase {
         // With grep pattern specified we should only see foo and not bar
         assertThat(text, containsString(WebConsoleTestActivator.FOO_LOG));
         assertThat(text, not(containsString(WebConsoleTestActivator.BAR_LOG)));
+    }
+
+    @Test
+    public void tailerGrepWithoutAppenderName() throws Exception {
+        TextPage page = webClient.getPage(prepareUrl("slinglog/tailer.txt"));
+        String text = page.getContent();
+
+        assertThat(
+                text,
+                containsString(String.format(
+                        "Provide appender name via [%s] request parameter", LogPanel.PARAM_APPENDER_NAME)));
     }
 
     @AfterClass

@@ -18,32 +18,33 @@
  */
 package org.apache.sling.commons.log.webconsole.internal;
 
+import jakarta.servlet.Servlet;
 import org.apache.sling.commons.log.logback.webconsole.LogPanel;
 import org.osgi.annotation.bundle.Header;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
 @Header(name = Constants.BUNDLE_ACTIVATOR, value = "${@class}")
 public class Activator implements BundleActivator {
-    private ServiceTracker<LogPanel, LogWebConsolePlugin> panelTracker;
+    private ServiceTracker<LogPanel, ServiceRegistration<Servlet>> panelTracker;
 
     @Override
     public void start(BundleContext context) throws Exception {
-        panelTracker = new ServiceTracker<LogPanel, LogWebConsolePlugin>(context, LogPanel.class, null) {
+        panelTracker = new ServiceTracker<LogPanel, ServiceRegistration<Servlet>>(context, LogPanel.class, null) {
             @Override
-            public LogWebConsolePlugin addingService(ServiceReference<LogPanel> reference) {
+            public ServiceRegistration<Servlet> addingService(ServiceReference<LogPanel> reference) {
                 LogPanel panel = context.getService(reference);
                 LogWebConsolePlugin plugin = new LogWebConsolePlugin(panel);
-                plugin.register(context);
-                return plugin;
+                return plugin.register(context);
             }
 
             @Override
-            public void removedService(ServiceReference<LogPanel> reference, LogWebConsolePlugin plugin) {
-                plugin.unregister();
+            public void removedService(ServiceReference<LogPanel> reference, ServiceRegistration<Servlet> serviceReg) {
+                serviceReg.unregister();
                 context.ungetService(reference);
             }
         };
